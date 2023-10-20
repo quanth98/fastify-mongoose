@@ -1,7 +1,5 @@
-import type { 
-    SchemaDefinition,
+import type {
     ConnectOptions,
-    SchemaOptions,
     Schema,
     MongooseQueryMiddleware,
     PreMiddlewareFunction
@@ -25,10 +23,7 @@ export interface MiddlewareModel {
 export interface ModelMongooseFastify {
     name: string;
     alias: string;
-    schema: SchemaDefinition;
-    options?: SchemaOptions;
-    plugins?: PluginModel[] | PluginWithOptionsModel[];
-    middlewares?: MiddlewareModel[];
+    schema: Schema;
 }
 
 export interface OptionsMongooseFastify extends ConnectOptions {

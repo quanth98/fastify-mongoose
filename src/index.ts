@@ -24,7 +24,10 @@ const mongooseFastifyPlugin: FastifyPluginCallback<OptionsMongooseFastify> = asy
     done();
 }
 
+export * as mongoose from 'mongoose';
+
 export default fp(mongooseFastifyPlugin, {
     fastify: '4.x',
     name: '@fastify/mongooseFastifyPlugin'
 });
+

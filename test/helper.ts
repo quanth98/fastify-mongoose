@@ -1,12 +1,12 @@
 import Fastify from 'fastify';
 
-import mongoCustom from '../src/index';
+import mongoCustom, { mongoose } from '../src/index';
 import { ModelMongooseFastify } from '../src/shared/mongoose-fastify';
 
-const modelUser = {
+export const modelUser = {
     name: "users",
     alias: "Users",
-    schema: {
+    schema: new mongoose.Schema({
         username: {
             type: String,
             required: true,
@@ -15,12 +15,12 @@ const modelUser = {
             type: Number,
             required: true,
         },
-    },
+    }),
 }
-const modelPost: ModelMongooseFastify = {
+export const modelPost: ModelMongooseFastify = {
     name: "posts",
     alias: "Post",
-    schema: {
+    schema: new mongoose.Schema({
         title: {
             type: String,
             required: true,
@@ -29,7 +29,7 @@ const modelPost: ModelMongooseFastify = {
             type: String,
             required: true,
         },
-    },
+    }),
 
 }
 

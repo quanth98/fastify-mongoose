@@ -2,9 +2,18 @@ import Fastify from 'fastify';
 import tap, { test } from 'tap';
 import assert  from 'node:assert';
 
-import mongoCustom from '../src/index';
+import mongoCustom, { mongoose } from '../src/index';
 
-import { CLIENT_NAME, DATABASE_NAME, DATABASE_NAME2, MODELS, MONGODB_URL, NO_DATABASE_MONGODB_URL, register } from './helper';
+import { 
+    CLIENT_NAME,
+    DATABASE_NAME,
+    DATABASE_NAME2,
+    MODELS,
+    MONGODB_URL,
+    NO_DATABASE_MONGODB_URL,
+    register,
+    modelUser
+} from './helper';
 
 test('Fastify-mongoose should exits', async (_test) => {
     const fastify = Fastify();
@@ -153,6 +162,46 @@ test('register with a name', async (t) => {
         await connection.close();
         t.ok(fastify.FastifyMongoose[CLIENT_NAME].client.allTenantConnections);
         t.notOk(fastify.FastifyMongoose[CLIENT_NAME].client.allTenantConnections[DATABASE_NAME]);
+    } catch (err) {
+        t.fail("Fastify threw", err)
+    }
+})
+
+test('Add middleware', async (t) => {
+    const fastify = Fastify()
+
+    t.teardown(fastify.close.bind(fastify));
+
+    try {
+        const useSchema = new mongoose.Schema({
+            username: {
+                type: String,
+                required: true,
+            },
+            age: {
+                type: Number,
+                required: true,
+            },
+        });
+        useSchema.pre('save', function(next) {
+            this.age += 2;
+            next();
+        })
+        await fastify
+            .register(mongoCustom, { url: NO_DATABASE_MONGODB_URL, models: [{
+                name: "users",
+                alias: "Users",
+                schema: useSchema
+            }], name: CLIENT_NAME })
+            .ready()
+
+        const connection = fastify.FastifyMongoose[CLIENT_NAME].client.useBb(DATABASE_NAME);
+        const user = await connection['Users'].create<typeof modelUser.schema>({
+            username: 'Test',
+            age: 1,
+        })
+        t.ok(user);
+        t.same(user.age, 3);
     } catch (err) {
         t.fail("Fastify threw", err)
     }

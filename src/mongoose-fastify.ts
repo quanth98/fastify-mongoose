@@ -44,47 +44,16 @@ export class FastifyMongoose {
         const fastifyMongooseClient: { [key: string]: Model<any> } = {};
 
         this._models.forEach(model => {
-            const { name, alias, schema, options, plugins, middlewares } = model;
+            const { name, alias, schema } = model;
 
-            const newSchema = new mongoose.Schema(schema, options || {});
-            // ** Logic xử lý middleware, plugins, methods, statics,... sẽ định nghĩa ở đây;
-            // ** Eg: newSchema.plugins = [];
-            
-            // ** Chưa test
-            if (plugins) {
-                // ** Chỉ sử dụng cho từng model.
-                plugins.forEach(plugin => {
-                    if (plugin.func) {
-                        newSchema.plugin(plugin.func, plugin.options);
-                    } else {
-                        newSchema.plugin(plugin);
-                    }
-                })
-            }
-
-            if (middlewares) {
-                // middlewares.forEach(middleware => {
-                //     const prefix = middleware.prefix;
-                //     switch (prefix) {
-                //         case 'pre':
-                //             newSchema.pre<typeof schema>(middleware.method, middleware.func)
-                //         case 'post':
-                //             newSchema.post<typeof schema>(middleware.method, middleware.func)
-                //         default:
-                //             break;
-                //     }
-                // })
-            }
-
-            fastifyMongooseClient[alias] = connection.model(alias, newSchema, name) as Model<any>;
+            fastifyMongooseClient[alias] = connection.model(alias, schema, name) as Model<any>;
         });
 
         // ** Cần thêm logic quản lý connection sẽ trả về ở đây.
-        return {
-            ...fastifyMongooseClient,
+        return Object.freeze(Object.assign({
             close: (forceClose?: boolean) => this.closeConnections(dbName, forceClose), // ** close current connection
             db: dbName,
-        };
+        }, fastifyMongooseClient));
     }
 
     // ** Close All tenant connections and default connection
