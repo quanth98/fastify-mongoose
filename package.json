@@ -1,5 +1,5 @@
 {
-  "name": "@quanth98/mongoose-fastify",
+  "name": "fastify-mongoose-multitenancy",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -17,12 +17,11 @@
   "author": "quanth",
   "license": "ISC",
   "dependencies": {
-    "@fastify/mongodb": "^8.0.0",
-    "@typescript-eslint/parser": "^6.7.5",
     "fastify-plugin": "^4.5.1",
     "mongoose": "^7.6.1"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^6.8.0",
     "eslint": "^8.51.0",
     "fastify": "^4.24.0",
     "rimraf": "^5.0.5",
@@ -31,7 +30,7 @@
     "typescript": "^5.2.2"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",

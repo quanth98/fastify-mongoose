@@ -38,7 +38,7 @@ export class FastifyMongoose {
         return this._tenantConnections;
     }
 
-    public useBb(dbName: string) {
+    public useDb(dbName: string) {
         const connection = this.getOrCreateConnectionByDbName(dbName);
 
         const fastifyMongooseClient: { [key: string]: Model<any> } = {};
