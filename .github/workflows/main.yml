@@ -1,4 +1,4 @@
-name Fastify/mongoose Private Package
+name: Fastify/mongoose Private Package
 
 on:
   push:
