@@ -1,0 +1,6 @@
+/node_modules
+/dist
+
+/.tap
+/.nyc_output
+/package-lock.json

@@ -1,0 +1,33 @@
+{
+  "name": "mongoose-fastify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rimraf ./dist && mkdir dist && tsc --outDir dist",
+    "lint": "eslint \"*/**/*.{js,ts,tsx}\"",
+    "prepublishOnly": "npm run build",
+    "test": "npm run build && npm run test:unit",
+    "test:unit": "tap --node-arg=--require=ts-node/register"
+  },
+  "author": "quanth",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/mongodb": "^8.0.0",
+    "@typescript-eslint/parser": "^6.7.5",
+    "fastify-plugin": "^4.5.1",
+    "mongoose": "^7.6.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "fastify": "^4.24.0",
+    "rimraf": "^5.0.5",
+    "tap": "^18.5.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
