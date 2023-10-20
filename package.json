@@ -1,5 +1,5 @@
 {
-  "name": "@quanth.dev/mongoose-fastify",
+  "name": "@quanth98/mongoose-fastify",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
