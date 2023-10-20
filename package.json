@@ -33,5 +33,8 @@
   "publishConfig": {
     "@quanth.dev:registry": "https://npm.pkg.github.com"
   },
-  "repository": "https://github.com/quanth98/fastify-mongoose.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quanth98/fastify-mongoose.git"
+  }
 }
