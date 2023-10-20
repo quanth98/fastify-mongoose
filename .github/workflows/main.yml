@@ -3,7 +3,7 @@ name Fastify/mongoose Private Package
 on:
   push:
     branchs:
-      - master
+      - main
 
 jobs:
   publish-gpr:
