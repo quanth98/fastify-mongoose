@@ -1,5 +1,5 @@
 {
-  "name": "mongoose-fastify",
+  "name": "fastify-mongoose",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -29,5 +29,11 @@
     "tap": "^18.5.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "url": "git://github.com/quanth98/fastify-mongoose.git"
   }
 }
