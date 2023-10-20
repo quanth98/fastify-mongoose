@@ -7,6 +7,12 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "fastify",
+    "fastify-mongoose",
+    "fastify-mongoose-multitenancy",
+    "mongoose-multitenancy"
+  ],
   "scripts": {
     "build": "rimraf ./dist && mkdir dist && tsc --outDir dist",
     "lint": "eslint \"*/**/*.{js,ts,tsx}\"",
