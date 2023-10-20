@@ -18,7 +18,7 @@ jobs:
       - run: npm install
       - run: npm ci
       - run: npm run build
-      - run: npm publish --workspace=packages
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.FASTIFY_GITHUB_TOKEN}}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
