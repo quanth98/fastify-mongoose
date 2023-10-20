@@ -1,5 +1,5 @@
 {
-  "name": "fastify-mongoose",
+  "name": "mongoose-fastify",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
