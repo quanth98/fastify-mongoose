@@ -31,7 +31,7 @@
     "typescript": "^5.2.2"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "@quanth98:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "url": "git://github.com/quanth98/fastify-mongoose.git"
