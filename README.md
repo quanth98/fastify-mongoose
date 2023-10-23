@@ -26,7 +26,7 @@ module.exports = {
 }
 // app.js
 const fastify = Fastify();
-fastify.register(require("fastify-mongoose-driver"), {
+fastify.register(require("fastify-mongoose-multitenancy"), {
     // ** All options below are required.
     models: [{
         name: "users", // ** Name of model
@@ -38,8 +38,37 @@ fastify.register(require("fastify-mongoose-driver"), {
     name: 'db1',
     // ... settings for mongoose
 })
-fastify.get("/", async (request, reply) => {
-  console.log(fastify.FastifyMongoose['db1']); // Using mongoose connect to localhost:27017
+fastify.register(require("fastify-mongoose-multitenancy"), {
+    // ** All options below are required.
+    models: [{
+        name: "users",
+        alias: "Users",
+        schema: userSchema
+    }],
+    url: 'mongodb://localhost:27017',
+    forceClose: true,
+    name: 'db2',
+    // ... settings for mongoose
+})
+fastify.register(require("fastify-mongoose-multitenancy"), {
+    models: [{
+        name: "users",
+        alias: "Users",
+        schema: userSchema
+    }],
+    url: 'mongodb://localhost:27017',
+    forceClose: true,
+    // ... settings for mongoose
+})
+fastify.get("/default", async (request, reply) => {
+  const connection = fastify.FastifyMongoose.client.useDb('DATABASE_NAME');
+  const userModel = await connection['Users'].create({ username: 'Boo', age: 20 });
+});
+fastify.get("/db1", async (request, reply) => {
+  const connection = fastify.FastifyMongoose['db1'].client.useDb('DATABASE_NAME');
+  const userModel = await connection['Users'].create({ username: 'Boo', age: 20 });
+});
+fastify.get("/db2", async (request, reply) => {
   const connection = fastify.FastifyMongoose['db1'].client.useDb('DATABASE_NAME');
   const userModel = await connection['Users'].create({ username: 'Boo', age: 20 });
 });
