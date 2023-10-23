@@ -28,7 +28,7 @@ test('Fastify-mongoose should exits', async (_test) => {
         _test.ok(fastify.FastifyMongoose);
         _test.ok(fastify.FastifyMongoose.client);
 
-        const userModel = fastify.FastifyMongoose.client.useBb('test_database')['Users'];
+        const userModel = fastify.FastifyMongoose.client.useDb('test_database')['Users'];
         const user = await userModel.find({});
 
         _test.ok(userModel);
@@ -125,27 +125,15 @@ test('double register with different name', async (t) => {
 
     t.ok(fastify.FastifyMongoose.ObjectId)
     t.ok(fastify.FastifyMongoose.client)
-    t.ok(fastify.FastifyMongoose.client.useBb(DATABASE_NAME).db, DATABASE_NAME)
+    t.ok(fastify.FastifyMongoose.client.useDb(DATABASE_NAME).db, DATABASE_NAME)
 
     t.ok(fastify.FastifyMongoose.client1.client)
     t.ok(fastify.FastifyMongoose.client1.ObjectId)
-    t.ok(fastify.FastifyMongoose.client1.client.useBb(DATABASE_NAME).db, DATABASE_NAME)
+    t.ok(fastify.FastifyMongoose.client1.client.useDb(DATABASE_NAME).db, DATABASE_NAME)
 
     t.ok(fastify.FastifyMongoose.client2.client)
     t.ok(fastify.FastifyMongoose.client2.ObjectId)
-    t.ok(fastify.FastifyMongoose.client2.client.useBb(DATABASE_NAME2).db, DATABASE_NAME)
-
-    // t.objectId(fastify.FastifyMongoose.ObjectId)
-    // t.client(fastify.mongo.client)
-    // t.database(fastify.mongo.db)
-
-    // t.objectId(fastify.mongo.client1.ObjectId)
-    // t.client(fastify.mongo.client1.client)
-    // t.database(fastify.mongo.client1.db)
-
-    // t.objectId(fastify.mongo.client2.ObjectId)
-    // t.client(fastify.mongo.client2.client)
-    // t.database(fastify.mongo.client2.db)
+    t.ok(fastify.FastifyMongoose.client2.client.useDb(DATABASE_NAME2).db, DATABASE_NAME)
 });
 
 test('register with a name', async (t) => {
@@ -158,7 +146,7 @@ test('register with a name', async (t) => {
             .register(mongoCustom, { url: NO_DATABASE_MONGODB_URL, models: MODELS, name: CLIENT_NAME })
             .ready()
 
-        const connection = fastify.FastifyMongoose[CLIENT_NAME].client.useBb(DATABASE_NAME);
+        const connection = fastify.FastifyMongoose[CLIENT_NAME].client.useDb(DATABASE_NAME);
         await connection.close();
         t.ok(fastify.FastifyMongoose[CLIENT_NAME].client.allTenantConnections);
         t.notOk(fastify.FastifyMongoose[CLIENT_NAME].client.allTenantConnections[DATABASE_NAME]);
@@ -195,13 +183,51 @@ test('Add middleware', async (t) => {
             }], name: CLIENT_NAME })
             .ready()
 
-        const connection = fastify.FastifyMongoose[CLIENT_NAME].client.useBb(DATABASE_NAME);
+        const connection = fastify.FastifyMongoose[CLIENT_NAME].client.useDb(DATABASE_NAME);
         const user = await connection['Users'].create<typeof modelUser.schema>({
             username: 'Test',
             age: 1,
         })
         t.ok(user);
         t.same(user.age, 3);
+    } catch (err) {
+        t.fail("Fastify threw", err)
+    }
+})
+
+test('Add plugins global', async (t) => {
+    t.plan(2)
+    const fastify = Fastify()
+
+    t.teardown(fastify.close.bind(fastify));
+
+    try {
+        const useSchema = new mongoose.Schema({
+            username: {
+                type: String,
+                required: true,
+            },
+            age: {
+                type: Number,
+                required: true,
+            },
+        });
+        await fastify
+            .register(mongoCustom, { url: NO_DATABASE_MONGODB_URL, models: [{
+                name: "users",
+                alias: "Users",
+                schema: useSchema
+            }], name: CLIENT_NAME })
+            .ready()
+
+        const connection = fastify.FastifyMongoose[CLIENT_NAME].client.useDb(DATABASE_NAME);
+        connection.plugin([() => {
+            console.log('plugin 1')
+        }]);
+
+        t.ok(connection.plugins);
+        t.same(connection.plugins.length, 1);
+
     } catch (err) {
         t.fail("Fastify threw", err)
     }

@@ -1,4 +1,4 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 
 import type { ModelMongooseFastify, OptionsMongooseFastify } from './shared/mongoose-fastify';
 
@@ -53,6 +53,13 @@ export class FastifyMongoose {
         return Object.freeze(Object.assign({
             close: (forceClose?: boolean) => this.closeConnections(dbName, forceClose), // ** close current connection
             db: dbName,
+            plugin(plugins: Array<(schema: Schema, opts?: any) => void>) {
+                plugins.forEach(plugin => {
+                    connection.plugin(plugin)
+                });
+                return connection.plugins;
+            },
+            plugins: connection.plugins,
         }, fastifyMongooseClient));
     }
 
